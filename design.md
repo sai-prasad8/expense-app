@@ -1,56 +1,63 @@
-Objectives:
-(Spending by time (and category))
-1. Weekly and monthly spending trends.
-2. Bar graph of spending by category.
-3. Budget progress.
-
-Design schema to store transaction (and category data).
-Take transaction data from email and store in elastic search.
-
-Requirements:
-
-1. User Registration through online portal
-2. Option to add/edit transactions
-3. Categorize (using mcc codes)
-4. Generate daily weekly and monthly reports (must include
-    graphs    and statistics like avg,delta inc/dec )
-5. Kibana scrips to generate these stats(have to decide on types of graphs).
-6. daily report stats with spending and comparision with      previous    days followed a bar graph showing this stat. 
-    Prediction/trajectory for this week.
-    Show detailed spending category wise.
-7. 
-
-Basic Architechture:
-
-1. elastic search Aws Rds instance stores the transaction data of users.
-2. Kibana instance(s) talk to rds.
-3. One instance parses data from email and store it in rds  
-4. the main server runs a script daily that tells kibana to generate report. After generating report the kibana instance mails the report.
-(do i need to seperate server and kibana instance?)
-5. use load balancer if necessary.
-
-Database Schema:
-
-elastic serach document:
-    userid
-    comments
-    amount (.00 precision is enough)
-    reciever info(?)
-    category ()
-    date
-    (optional -how to implement more filters?)
-
-Server design:
-    We need access daily transactions in email 
-    Store and categorize them
-    Generate daily report from this data.
-    Send the report to user via email.
-    these scripts need to run daily
+# Expense App
 
 
-    <!-- i need to learn about accessing email and sending mails. -->
-    
+## Objective:
+Design an expense tracker application that sources spending data directly from email accounts.
 
+This expense tracker should:
 
+1. Automatically fetch transaction data from email accounts.
+2. Categorize transactions based on merchant information.
+3. Provide comprehensive spending analysis and reports.
 
+## Requirements:
+
+1. **User Registration**: Users should be able to register through an online portal.
+2. **Transaction Management**: Provide options to add/edit transactions.
+3. **Categorization**: Categorize transactions using MCC (Merchant Category Code) codes.
+4. **Report Generation**: Generate daily, weekly, and monthly reports with graphs and statistics such as averages, and delta increases/decreases.
+5. **Spending Analysis**:
+   - Weekly and monthly spending trends.
+   - Bar graph visualization of spending by category.
+   - Budget progress tracking
+
+## Basic Architechture:
+
+1. **Elasticsearch**: Elasticsearch RDS instances store the transaction data of users.
+2. **Kibana Integration**: Kibana instance(s) communicate with RDS for data visualization and analysis. 
+    ![basic architecture image](/designassets/basicarchitecture.png)
+
+## Database Schema:
+
+### Elasticsearch Document:
+- `userid`: Unique user identifier.
+- `comments`: Additional transaction notes.
+- `currency`: Currency of transaction.
+- `amount`: Transaction amount (up to two decimal places).
+- `type`: Transaction type (expense or income).
+- `receiver info`: Recipient information (optional).
+- `category`: Transaction category.
+- `date`: Transaction date.
+- `time`: Transaction time.
+- *(Optional)* Additional Filters: Explore metadata for advanced filtering options.
+
+## Server Design:
+
+1. **Accessing Transactions**:
+   - Fetch daily emails for transactions.
+   - Parse emails to extract transaction details.
+
+2. **Storing and Categorizing**:
+   - Store data in Elasticsearch.
+   - Categorize transactions based on predefined rules.
+
+3. **Generating Reports**:
+   - Compile daily transaction data.
+   - Create reports with graphs and statistics.
+
+4. **Sending Reports via Email**:
+   - Automate email dispatch of reports to users.
+
+5. **Automation**:
+   - Schedule daily execution of scripts.
 
