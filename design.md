@@ -2,7 +2,7 @@
 
 
 ## Objective:
-Design an expense tracker application that sources spending data directly from email accounts.
+Design an expense tracker application that sources spending data directly from email accounts.(we will use gmail api so, it will work with gmails only.)
 
 This expense tracker should:
 
@@ -31,14 +31,17 @@ This expense tracker should:
 
 ### Elasticsearch Document:
 - `userid`: Unique user identifier.
+- `transaction_id`: Unique id for each transaction.
 - `comments`: Additional transaction notes.
 - `currency`: Currency of transaction.
 - `amount`: Transaction amount (up to two decimal places).
 - `type`: Transaction type (expense or income).
-- `receiver info`: Recipient information (optional).
+- `receiver_info`: Recipient information (optional).
 - `category`: Transaction category.
 - `date`: Transaction date.
 - `time`: Transaction time.
+- `created_at`: insertion time
+- `updated_at`: updation time
 - *(Optional)* Additional Filters: Explore metadata for advanced filtering options.
 
 ## Server Design:
