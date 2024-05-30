@@ -64,9 +64,9 @@ This expense tracker should:
    - Schedule daily execution of scripts.
 
    **Handling Emails**
-1. Use AWS event bridge to schedule daily execution.
-2. Use Lambda functions to run 'user details fetcher' and 'Emails fetcher and parser'.
-3. Use AWS SQS for queues inbetween the lamdba functions.
+   1. Use AWS event bridge to schedule daily execution.
+   2. Use Lambda functions to run 'user details fetcher' and   'Emails fetcher and parser'.
+   3. Use AWS SQS for queues inbetween the lamdba functions.
 
 
 
