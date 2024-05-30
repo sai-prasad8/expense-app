@@ -45,7 +45,6 @@ This expense tracker should:
 - *(Optional)* Additional Filters: Explore metadata for advanced filtering options.
 
 ## Server Design:
-
 1. **Accessing Transactions**:
    - Fetch daily emails for transactions.
    - Parse emails to extract transaction details.
@@ -63,4 +62,11 @@ This expense tracker should:
 
 5. **Automation**:
    - Schedule daily execution of scripts.
+
+   **Handling Emails**
+1. Use AWS event bridge to schedule daily execution.
+2. Use Lambda functions to run 'user details fetcher' and 'Emails fetcher and parser'.
+3. Use AWS SQS for queues inbetween the lamdba functions.
+
+
 
