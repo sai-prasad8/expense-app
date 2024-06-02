@@ -45,6 +45,22 @@ This expense tracker should:
 - *(Optional)* Additional Filters: Explore metadata for advanced filtering options.
 
 ## Server Design:
+
+   **Handling Emails**
+   1. Use AWS event bridge to schedule daily execution.
+   2. Use Lambda functions to run 'user details fetcher' and   'Emails fetcher and parser'.
+   3. Use AWS SQS for queues inbetween the lamdba functions.
+
+   **Email Fetcher and Parser:**
+   this component retrieves the user/client gmail along with access token from 'user details fetcher' via queue.
+   It uses gmail api to read emails. It filters and searches for mails sent from bank emails.
+
+   The email body is then parsed using a set of regex patterns corresponding to the bank templates to extract necessary data: amount, currency, transaction type, date, time, category, receiver info.
+   (The bank emails and their regex patterns are stored in a configuration file within the executable JAR.)
+
+   The extracted data is stored in Elasticsearch, and the user_id/email is added to the queue for the reporter component.
+
+
 1. **Accessing Transactions**:
    - Fetch daily emails for transactions.
    - Parse emails to extract transaction details.
@@ -62,11 +78,4 @@ This expense tracker should:
 
 5. **Automation**:
    - Schedule daily execution of scripts.
-
-   **Handling Emails**
-   1. Use AWS event bridge to schedule daily execution.
-   2. Use Lambda functions to run 'user details fetcher' and   'Emails fetcher and parser'.
-   3. Use AWS SQS for queues inbetween the lamdba functions.
-
-
 
