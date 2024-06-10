@@ -17,3 +17,5 @@ run `npm install`.
 
 `node index.js` .
 or `nodemon index.js` for development.
+
+project should be up on http://localhost:3000
