@@ -1,0 +1,30 @@
+{
+  "name": "expenseswebserver",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sai-prasad8/expense-app.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sai-prasad8/expense-app/issues"
+  },
+  "homepage": "https://github.com/sai-prasad8/expense-app#readme",
+  "description": "",
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.592.0",
+    "@aws-sdk/lib-dynamodb": "^3.592.0",
+    "crypto": "^1.0.1",
+    "ejs": "^3.1.10",
+    "express": "^4.19.2",
+    "express-session": "^1.18.0",
+    "googleapis": "^140.0.0",
+    "jsonwebtoken": "^9.0.2"
+  }
+}
