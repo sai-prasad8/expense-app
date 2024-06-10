@@ -7,5 +7,11 @@ go to credentials.js and fill
 
 # Start Server 
 
+## Install dependencies
+
+run `npm install`
+
+## Start Server
+
 `node index.js` 
 or `nodemon index.js` for development
