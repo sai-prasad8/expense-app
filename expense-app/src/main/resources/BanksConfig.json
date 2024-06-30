@@ -1,0 +1,122 @@
+[
+  {
+    "bankName": "HDFC-Credit-card",
+    "filter": "from:alerts@hdfcbank.net subject:\"Update on your HDFC Bank Credit Card\"",
+    "amountRegex": "Rs\\s*(\\d+\\.\\d{2})(?:\\s+at|,)",
+    "currencyRegex": "abc",
+    "transactionTypeRegex": "(is\\s*reversed)",
+    "timeStampRegex": "(\\d{2}-\\d{2}-\\d{4}\\s*\\d{2}:\\d{2}:\\d{2})",
+    "merchantRegex": "at\\s*([A-Z0-9 ]+) on",
+    "paymentInstrumentRegex": "(Credit\\s*Card\\s*ending\\s*\\d{4})"
+  },
+  {
+    "bankName": "HDFC-Credit-test",
+    "filter": "from:prashanth.kamle@gmail.com subject:\"Update on your HDFC Bank Credit Card\"",
+    "amountRegex": "Rs\\s*(\\d+\\.\\d{2})(?:\\s+at|,)",
+    "currencyRegex": "abc",
+    "transactionTypeRegex": "(is\\s*reversed)",
+    "timeStampRegex": "(\\d{2}-\\d{2}-\\d{4}\\s*\\d{2}:\\d{2}:\\d{2})",
+    "merchantRegex": "at\\s*([A-Z0-9 ]+) on",
+    "paymentInstrumentRegex": "(Credit\\s*Card\\s*ending\\s*\\d{4})"
+  },
+  {
+    "bankName": "HDFC-UPI",
+    "filter": "from:alerts@hdfcbank.net subject: \"You have done a UPI txn. Check details!\"",
+    "amountRegex": "Rs\\.(\\d+\\.\\d{2}\\s*has",
+    "currencyRegex": "abc",
+    "transactionTypeRegex": "abc",
+    "timeStampRegex": "(\\d{2}-\\d{2}-\\d{2})",
+    "merchantRegex": "to\\s*([A-Za-z0-9@ ]+)\\s*on",
+    "paymentInstrumentRegex": "(account \\*\\*\\d{4})"
+  },
+  {
+    "bankName": "HDFC-UPI-test",
+    "filter": "from:prashanth.kamle@gmail.com subject:\"You have done a UPI txn. Check details!\"",
+    "amountRegex": "Rs\\.(\\d+\\.\\d{2}) has",
+    "currencyRegex": "abc",
+    "transactionTypeRegex": "abc",
+    "timeStampRegex": "(\\d{2}-\\d{2}-\\d{2})",
+    "merchantRegex": "to\\s*([A-Za-z0-9@ ]+)\\s*on",
+    "paymentInstrumentRegex": "(account \\*\\*\\d{4})"
+  },
+  {
+    "bankName": "HDFC-Debit-Card",
+    "filter": "from:alerts@hdfcbank.net subject: \"Account update for your HDFC Bank A/c\" Thank you for using your HDFC Bank Debit Card ",
+    "amountRegex": "Rs\\s*(\\d+\\.\\d{2})(?:\\s+at|,)",
+    "currencyRegex": "abc",
+    "transactionTypeRegex": "abc",
+    "timeStampRegex": "(\\d{2}-\\d{2}-\\d{4}\\s*\\d{2}:\\d{2}:\\d{2})",
+    "merchantRegex": "at\\s*([A-Z0-9 -_]+)\\s*on",
+    "paymentInstrumentRegex": "(Debit\\s*Card\\s*ending\\s*\\d{4})"
+  },
+  {
+    "bankName": "HDFC-Debit-Card-test",
+    "filter": "from:prashanth.kamle@gmail.com subject: \"Account update for your HDFC Bank A/c\" Thank you for using your HDFC Bank Debit Card ",
+    "amountRegex": "Rs\\s*(\\d+\\.\\d{2})(?:\\s+at|,)",
+    "currencyRegex": "abc",
+    "transactionTypeRegex": "abc",
+    "timeStampRegex": "(\\d{2}-\\d{2}-\\d{4}\\s*\\d{2}:\\d{2}:\\d{2})",
+    "merchantRegex": "at\\s*([A-Z0-9 -_]+)\\s*on",
+    "paymentInstrumentRegex": "(Debit\\s*Card\\s*ending\\s*\\d{4})"
+  },
+  {
+    "bankName": "HDFC-UPI-received",
+    "filter": "from:alerts@hdfcbank.net subject: \"Account update for your HDFC Bank A/c\" UPI transaction",
+    "amountRegex": "Rs\\.\\s*(\\d+\\.\\d{2}\\s*has",
+    "currencyRegex": "abc",
+    "transactionTypeRegex": "credited",
+    "timeStampRegex": "(\\d{2}-\\d{2}-\\d{2})",
+    "merchantRegex": "by\\s*([A-Za-z0-9@\\.-_ \\s*]+)\\s*on",
+    "paymentInstrumentRegex": "(account\\s*\\*\\*\\d{4})"
+  },
+  {
+    "bankName": "HDFC-UPI-received-test",
+    "filter": "from:prashanth.kamle@gmail.com subject: \"Account update for your HDFC Bank A/c\" UPI transaction",
+    "amountRegex": "Rs\\.\\s*(\\d+\\.\\d{2})\\s*is",
+    "currencyRegex": "abc",
+    "transactionTypeRegex": "credited",
+    "timeStampRegex": "(\\d{2}-\\d{2}-\\d{2})",
+    "merchantRegex": "by\\s*([A-Za-z0-9@\\.-_ \\s*]+)\\s*on",
+    "paymentInstrumentRegex": "(account\\s*\\*\\*\\d{4})"
+  },
+  {
+    "bankName": "HDFC-Deposit",
+    "filter": "from:alerts@hdfcbank.net subject: \"New Deposit Alert: Check your A/c balance now!\"",
+    "amountRegex": "is\\s*INR\\s*([0-9,]+.\\d{2})\\s*in",
+    "currencyRegex": "abc",
+    "transactionTypeRegex": "credited",
+    "timeStampRegex": "(\\d{2}-(?:JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)-\\d{2})",
+    "merchantRegex": "on\\s*([A-Za-z0-9@\\.-_ \\s*]+)\\s*Your",
+    "paymentInstrumentRegex": "(account\\s*\\X\\X\\d{4})"
+  },
+  {
+    "bankName": "HDFC-Deposit-test",
+    "filter": "from:prashanth.kamle@gmail.com subject: \" New Deposit Alert: Check your A/c balance now!\"",
+    "amountRegex": "is\\s*INR\\s*([0-9,]+.\\d{2})\\s*in",
+    "currencyRegex": "abc",
+    "transactionTypeRegex": "credited",
+    "timeStampRegex": "(\\d{2}-(?:JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)-\\d{2})",
+    "merchantRegex": "(?<=account of )(.+\\s*.+)",
+    "paymentInstrumentRegex": "(account\\s*\\X\\X\\d{4})"
+  },
+  {
+    "bankName": "HDFC-Withdrawal",
+    "filter": "from:alerts@hdfcbank.net subject: \"Withdrawal Alert: Check your A/c balance now!\"",
+    "amountRegex": "is\\s*INR\\s*([0-9,]+.\\d{2})\\s*from",
+    "currencyRegex": "abc",
+    "transactionTypeRegex": "abc",
+    "timeStampRegex": "(\\d{2}-(?:JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)-\\d{2})",
+    "merchantRegex": "(?<=account of )(.+\\s*.+)",
+    "paymentInstrumentRegex": "(account\\s*\\X\\X\\d{4})"
+  },
+  {
+    "bankName": "HDFC-Withdrawal-test",
+    "filter": "from:prashanth.kamle@gmail.com subject: \"Withdrawal Alert: Check your A/c balance now!\"",
+    "amountRegex": "is\\s*INR\\s*([0-9,]+.\\d{2})\\s*from",
+    "currencyRegex": "abc",
+    "transactionTypeRegex": "abc",
+    "timeStampRegex": "(\\d{2}-(?:JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)-\\d{2})",
+    "merchantRegex": "(?<=account of )(.+\\s*.+)",
+    "paymentInstrumentRegex": "(account\\s*\\X\\X\\d{4})"
+  }
+]

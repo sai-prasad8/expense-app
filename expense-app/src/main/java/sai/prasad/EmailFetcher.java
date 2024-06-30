@@ -17,8 +17,7 @@ import com.google.api.services.gmail.GmailScopes;
 import com.google.api.services.gmail.model.*;
 import lombok.extern.java.Log;
 
-
-import java.io.*;
+import java.io.IOException;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -35,7 +34,7 @@ public class EmailFetcher {
 
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy/MM/dd");
 
-
+    List<BankConfig> bankConfigs;
     private String token;
     private Date startDate;
     private Date endDate;
@@ -49,7 +48,7 @@ public class EmailFetcher {
         List<Message> messages = response.getMessages();
 
 
-        if (messages.isEmpty()) {
+        if (messages == null) {
             log.info("No messages found.");
         } else {
             log.info("Messages:");
@@ -75,20 +74,36 @@ public class EmailFetcher {
         String startFormatted = DATE_FORMAT.format(startDate);
         String endFormatted = DATE_FORMAT.format(endDate);
 
-//        List<Message> messages = listMessagesMatchingQuery(service, "after:" + startFormatted + " before:" + endFormatted);
-        List<Message> messages = listMessagesMatchingQuery(service,"from:admin@linuxmint.com");
+
+
         List<Email> emailList = new ArrayList<>();
-        for (Message m : messages) {
-            Message fullMessage = fetchFullMessage(service, "me", m.getId());
+        for(BankConfig bankConfig : bankConfigs){
+            String filter = bankConfig.getFilter();
+            String bankName = bankConfig.getBankName();
+            System.out.println(bankConfig);
+//            List<Message> messages = listMessagesMatchingQuery(service, filter+" after:" + startFormatted + " before:" + endFormatted);
+//            List<Message> messages = listMessagesMatchingQuery(service,"subject:Update on your HDFC Bank Credit Card");
+            List<Message> messages = listMessagesMatchingQuery(service, filter);
 
-            String subject = getMessageSubject(fullMessage);
-            String body = getMessageBody(fullMessage);
-            Email email = new Email();
-            email.setSubject(subject);
-            email.setBody(body);
-            email.setUserID("get userid from queue");
+            if(messages != null) {
+                for (Message m : messages) {
+                    Message fullMessage = fetchFullMessage(service, "me", m.getId());
 
-            emailList.add(email);
+                    String subject = getMessageSubject(fullMessage);
+                    String snippet = fullMessage.getSnippet();
+                    String body = getMessageBody(fullMessage);
+
+                    Email email = new Email();
+                    email.setSubject(subject);
+                    email.setSnippet(snippet);
+                    email.setBody(body);
+                    email.setBankName(bankName);
+                    email.setUserID("get userid from queue");
+
+                    emailList.add(email);
+                }
+            }
+
         }
 
 
@@ -97,14 +112,18 @@ public class EmailFetcher {
     }
 
 
+
+
     private Credential fetchCredentialUsingRefreshToken() throws Exception {
         NetHttpTransport httpTransport = GoogleNetHttpTransport.newTrustedTransport();
 
         GoogleClientSecrets clientSecrets = new GoogleClientSecrets();
         GoogleClientSecrets.Details details = new GoogleClientSecrets.Details();
+
         details.setClientId(clientId);
         details.setClientSecret(clientSecret);
         clientSecrets.setWeb(details);
+
 
 
         GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
@@ -134,12 +153,14 @@ public class EmailFetcher {
         return "No subject found";
     }
 
+
+
     private static String getMessageBody(Message message) {
         MessagePart payload = message.getPayload();
         String body = payload.getBody().getData();
         body = decodeBase64(body);
         if(body.equals("")) {
-            body = StringUtils.newStringUtf8(Base64.getMimeDecoder().decode(message.getPayload().getParts().get(0).getBody().getData()));
+            body = StringUtils.newStringUtf8(Base64.getUrlDecoder().decode(message.getPayload().getParts().get(0).getBody().getData()));
 
         }
         return body;
