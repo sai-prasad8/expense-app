@@ -1,9 +1,9 @@
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
-import { ACCESS_KEY_ID, SECRET_ACCESS_KEY } from "./credentials.js";
+import { ACCESS_KEY_ID, SECRET_ACCESS_KEY, region } from "./credentials.js";
 
 const dbClient = new DynamoDBClient({
-  region: "ap-south-1",
+  region: region,
   credentials: {
     accessKeyId: ACCESS_KEY_ID,
     secretAccessKey: SECRET_ACCESS_KEY,
