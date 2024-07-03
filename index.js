@@ -38,7 +38,6 @@ async function addEmail(email) {
       Item: email,
     })
   );
-  console.log(response);
 }
 
 app.get("/", (req, res) => {
@@ -72,9 +71,11 @@ app.get("/logged", async (req, res) => {
 
     const googleUser = jwt.decode(userCredential.id_token);
 
+    const refresh_token = userCredential.refresh_token;
+
     const email = googleUser.email;
 
-    addEmail({ email: email });
+    addEmail({ email: email, refresh_token: refresh_token });
 
     res.render("logged.ejs");
   }
