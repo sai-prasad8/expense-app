@@ -5,7 +5,15 @@ go to credentials.js and fill
 
 
 `CLIENT_ID`,`CLIENT_SECRET`,`REDIRECT_URI` -> get from google cloud oauth.
-`ACCESS_KEY_ID`,`SECRET_ACCESS_KEY`, `TableName`, `region` -> get from aws dynamoDB.
+
+
+
+`ACCESS_KEY_ID`,`SECRET_ACCESS_KEY` -> get from aws IAM (create new user and make new access key in security credentials).
+
+
+
+
+`TableName`, `region` -> get from aws dynamoDB.
 
 # Start Server 
 
