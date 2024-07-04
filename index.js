@@ -1,4 +1,3 @@
-import express from "express";
 import documentClient from "./dynamodbClient.js";
 import { ScanCommand } from "@aws-sdk/lib-dynamodb";
 import { SQSClient, SendMessageCommand } from "@aws-sdk/client-sqs";
@@ -10,8 +9,6 @@ import {
   region,
 } from "./credentials.js";
 
-const app = express();
-const port = 3000;
 const configObject = {
   region: region,
   credentials: {
@@ -21,16 +18,7 @@ const configObject = {
 };
 const sqsClient = new SQSClient(configObject);
 
-async function getAllEmail() {
-  const response = await documentClient.send(
-    new ScanCommand({
-      TableName: TableName,
-    })
-  );
-  console.log(response);
-}
-
-app.get("/", async (req, res) => {
+export const handler = async (event) => {
   const response = await documentClient.send(
     new ScanCommand({
       TableName: TableName,
@@ -48,10 +36,10 @@ app.get("/", async (req, res) => {
     },
   });
   const result = await sqsClient.send(command);
-  console.log(result)
-  res.json({ Items });
-});
-
-app.listen(port, () => {
-  console.log(`listening to port ${port}`);
-});
+  return {
+    statusCode: 200,
+    body: JSON.stringify({
+        message: 'sent to sqs success',
+    }),
+};
+};
