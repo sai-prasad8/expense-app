@@ -28,4 +28,8 @@ run `npm install`.
 `node index.js` .
 or `nodemon index.js` for development.
 
-you can send a GET request to `http://localhost:3000/` to take data from dynamoDB and recieve it in SQS
+## upload to Lambda
+
+zip the file and make sure index.js is in the root directory, so like function/index.js and not function/function/index.js
+
+and upload to lambda and test
