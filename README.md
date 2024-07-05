@@ -23,7 +23,7 @@ go to credentials.js and fill
 
 run `npm install`.
 
-## Start Server
+## Run Function
 
 `node index.js` .
 or `nodemon index.js` for development.
