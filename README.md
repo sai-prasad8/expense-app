@@ -17,7 +17,7 @@ go to credentials.js and fill
 
 
 
-# Start Server 
+# Run Function
 
 ## Install dependencies
 
