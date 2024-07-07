@@ -33,17 +33,18 @@ public class EmailFetcher {
     private static final List<String> SCOPES = Collections.singletonList(GmailScopes.GMAIL_READONLY);
 
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy/MM/dd");
+    private static final String user = "me";
 
     List<BankConfig> bankConfigs;
     private String token;
     private Date startDate;
     private Date endDate;
-
+    private String userId;
     private String clientId;
     private String clientSecret;
 
     private List<Message> listMessagesMatchingQuery(Gmail service, String query) throws IOException {
-        String user = "me";
+
         ListMessagesResponse response = service.users().messages().list(user).setQ(query).execute();
         List<Message> messages = response.getMessages();
 
@@ -54,7 +55,7 @@ public class EmailFetcher {
             log.info("Messages:");
             for (Message message : messages) {
                 log.info("- " + message.getId());
-                log.info("Message: " + message.toPrettyString());
+
 
             }
         }
@@ -71,8 +72,8 @@ public class EmailFetcher {
                 .setApplicationName(APPLICATION_NAME)
                 .build();
 
-        String startFormatted = DATE_FORMAT.format(startDate);
-        String endFormatted = DATE_FORMAT.format(endDate);
+//        String startFormatted = DATE_FORMAT.format(startDate);
+//        String endFormatted = DATE_FORMAT.format(endDate);
 
 
 
@@ -80,7 +81,8 @@ public class EmailFetcher {
         for(BankConfig bankConfig : bankConfigs){
             String filter = bankConfig.getFilter();
             String bankName = bankConfig.getBankName();
-            System.out.println(bankConfig);
+
+
 //            List<Message> messages = listMessagesMatchingQuery(service, filter+" after:" + startFormatted + " before:" + endFormatted);
 //            List<Message> messages = listMessagesMatchingQuery(service,"subject:Update on your HDFC Bank Credit Card");
             List<Message> messages = listMessagesMatchingQuery(service, filter);
@@ -92,13 +94,16 @@ public class EmailFetcher {
                     String subject = getMessageSubject(fullMessage);
                     String snippet = fullMessage.getSnippet();
                     String body = getMessageBody(fullMessage);
-
+                    body = body.replaceAll("\r\n", " ")
+                            .replaceAll("\n", " ")
+                            .replaceAll("\r", " ");
                     Email email = new Email();
                     email.setSubject(subject);
                     email.setSnippet(snippet);
                     email.setBody(body);
                     email.setBankName(bankName);
-                    email.setUserID("get userid from queue");
+                    email.setUserID(userId);
+
 
                     emailList.add(email);
                 }
@@ -139,7 +144,8 @@ public class EmailFetcher {
     }
 
     public static Message fetchFullMessage(Gmail service, String userId, String messageId) throws IOException {
-        return service.users().messages().get(userId, messageId).execute();
+        Optional<Message> Message = Optional.ofNullable(service.users().messages().get(userId, messageId).execute());
+        return Message.orElse(null);
 
     }
 

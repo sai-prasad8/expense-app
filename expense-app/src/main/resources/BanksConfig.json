@@ -86,7 +86,7 @@
     "currencyRegex": "abc",
     "transactionTypeRegex": "credited",
     "timeStampRegex": "(\\d{2}-(?:JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)-\\d{2})",
-    "merchantRegex": "on\\s*([A-Za-z0-9@\\.-_ \\s*]+)\\s*Your",
+    "merchantRegex": "(?<=account of )(.+)Your A/c",
     "paymentInstrumentRegex": "(account\\s*\\X\\X\\d{4})"
   },
   {
@@ -96,7 +96,7 @@
     "currencyRegex": "abc",
     "transactionTypeRegex": "credited",
     "timeStampRegex": "(\\d{2}-(?:JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)-\\d{2})",
-    "merchantRegex": "(?<=account of )(.+\\s*.+)",
+    "merchantRegex": "(?<=account of )(.+)Your A/c",
     "paymentInstrumentRegex": "(account\\s*\\X\\X\\d{4})"
   },
   {
@@ -106,7 +106,7 @@
     "currencyRegex": "abc",
     "transactionTypeRegex": "abc",
     "timeStampRegex": "(\\d{2}-(?:JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)-\\d{2})",
-    "merchantRegex": "(?<=account of )(.+\\s*.+)",
+    "merchantRegex": "(?<=account of )(.+)Your A/c",
     "paymentInstrumentRegex": "(account\\s*\\X\\X\\d{4})"
   },
   {
@@ -116,7 +116,7 @@
     "currencyRegex": "abc",
     "transactionTypeRegex": "abc",
     "timeStampRegex": "(\\d{2}-(?:JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)-\\d{2})",
-    "merchantRegex": "(?<=account of )(.+\\s*.+)",
+    "merchantRegex": "(?<=account of )(.+)Your A/c",
     "paymentInstrumentRegex": "(account\\s*\\X\\X\\d{4})"
   }
 ]
