@@ -3,6 +3,7 @@ package sai.prasad;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
+//TODO javadoc everywhere
 @Data
 public class BankConfig {
     @JsonProperty("bankName")

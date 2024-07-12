@@ -1,24 +1,25 @@
 package sai.prasad;
 
-import com.google.api.client.auth.oauth2.TokenResponse;
-import com.google.api.client.json.JsonFactory;
-import com.google.api.client.util.StringUtils;
-import com.google.api.client.util.store.MemoryDataStoreFactory;
-import lombok.AllArgsConstructor;
-
 import com.google.api.client.auth.oauth2.Credential;
+import com.google.api.client.auth.oauth2.TokenResponse;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.gson.GsonFactory;
+import com.google.api.client.util.StringUtils;
+import com.google.api.client.util.store.MemoryDataStoreFactory;
 import com.google.api.services.gmail.Gmail;
 import com.google.api.services.gmail.GmailScopes;
-import com.google.api.services.gmail.model.*;
+import com.google.api.services.gmail.model.ListMessagesResponse;
+import com.google.api.services.gmail.model.Message;
+import com.google.api.services.gmail.model.MessagePart;
+import com.google.api.services.gmail.model.MessagePartHeader;
+import lombok.AllArgsConstructor;
 import lombok.extern.java.Log;
 
 import java.io.IOException;
-
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -26,7 +27,7 @@ import java.util.*;
 @AllArgsConstructor
 @Log
 public class EmailFetcher {
-    private static final String APPLICATION_NAME = "Gmail API Java Quickstart";
+    private static final String APPLICATION_NAME = "Expense App";
 
     private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
 
@@ -72,20 +73,20 @@ public class EmailFetcher {
                 .setApplicationName(APPLICATION_NAME)
                 .build();
 
-//        String startFormatted = DATE_FORMAT.format(startDate);
-//        String endFormatted = DATE_FORMAT.format(endDate);
+        String startFormatted = DATE_FORMAT.format(startDate);
+        String endFormatted = DATE_FORMAT.format(endDate);
 
 
 
-        List<Email> emailList = new ArrayList<>();
+        List<Email> emailList = new ArrayList<>(); //TODO emails may not fit in memory
         for(BankConfig bankConfig : bankConfigs){
             String filter = bankConfig.getFilter();
             String bankName = bankConfig.getBankName();
 
+////TODO: check date from database
+            List<Message> messages = listMessagesMatchingQuery(service, filter+" after:" + startFormatted + " before:" + endFormatted);
 
-//            List<Message> messages = listMessagesMatchingQuery(service, filter+" after:" + startFormatted + " before:" + endFormatted);
-//            List<Message> messages = listMessagesMatchingQuery(service,"subject:Update on your HDFC Bank Credit Card");
-            List<Message> messages = listMessagesMatchingQuery(service, filter);
+
 
             if(messages != null) {
                 for (Message m : messages) {

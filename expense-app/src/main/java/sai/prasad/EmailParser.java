@@ -7,10 +7,10 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import java.util.UUID;
 
 
 @Log
@@ -55,6 +55,7 @@ public class EmailParser {
             if (amountMatcher.find()) {
                 amount = amountMatcher.group(1);
             }
+            //TODO
 
             // Extract transaction type
             String transactionType = "-1";

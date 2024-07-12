@@ -11,7 +11,7 @@ public class Transaction {
     private String userId;
     private BigDecimal amount;
     private String currencyCode;
-    private BigDecimal transactionType;
+    private BigDecimal transactionType; //TODO enum
     private Date timeStamp;
     private String paymentInstrument;
     private String merchant;

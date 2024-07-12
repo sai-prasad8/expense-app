@@ -1,94 +1,86 @@
 package sai.prasad;
 
 
+
+import com.amazonaws.services.lambda.runtime.Context;
+import com.amazonaws.services.lambda.runtime.RequestHandler;
+import com.amazonaws.services.lambda.runtime.events.SQSBatchResponse;
+import com.amazonaws.services.lambda.runtime.events.SQSEvent;
+import com.amazonaws.services.sqs.AmazonSQS;
+import com.amazonaws.services.sqs.AmazonSQSClientBuilder;
+import com.amazonaws.services.sqs.model.SendMessageRequest;
+import com.amazonaws.services.sqs.model.SendMessageResult;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.java.Log;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 
-import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
-import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
-import software.amazon.awssdk.regions.Region;
-import software.amazon.awssdk.services.sqs.SqsClient;
-import software.amazon.awssdk.services.sqs.model.*;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import lombok.extern.java.Log;
-
 @Log
-public class CredentialQueuePoller {
-    private static final String ACCESS_KEY = "aws-access-key";
-    private static final String SECRET_KEY = "aws-secret-key";
-    private  static  final String CREDS_QUEUE_URL = "aws-sqs-from-dynamodb";
-    private static final String EMAIL_QUEUE_URL = "aws-sqs-from-emailfetcher";
+
+public class CredentialQueuePoller implements RequestHandler<SQSEvent, SQSBatchResponse> {
+
+
+    private static final String EMAIL_QUEUE_URL = System.getenv("EMAIL_QUEUE_URL");
 
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
-    private final AwsBasicCredentials awsCreds = AwsBasicCredentials.create(ACCESS_KEY, SECRET_KEY);
-    private final SqsClient sqsClient = SqsClient.builder()
-            .region(Region.AP_SOUTH_1) // Change region if needed
-            .credentialsProvider(StaticCredentialsProvider.create(awsCreds))
-            .build();
 
 
-    public void poll() throws Exception {
-        //read credentials from environment
+    @Override
+    public SQSBatchResponse handleRequest(SQSEvent event, Context context) {
+        List<SQSBatchResponse.BatchItemFailure> batchItemFailureList = new ArrayList<>();
 
+        for (SQSEvent.SQSMessage message : event.getRecords()) {
+            try {
+                UserCredentials cred = objectMapper.readValue(message.getBody(), UserCredentials.class);
 
+                // Process the message
+                processMessage(cred.getRefresh_token(), cred.getEmail());
 
-
-        while (true) {
-
-            ReceiveMessageRequest receiveMessageRequest = ReceiveMessageRequest.builder()
-                    .queueUrl(CREDS_QUEUE_URL)
-                    .maxNumberOfMessages(10)
-                    .waitTimeSeconds(10) // Long polling
-                    .build();
-
-            ReceiveMessageResponse response = sqsClient.receiveMessage(receiveMessageRequest);
-            List<Message> messages = response.messages();
-            ObjectMapper objectMapper = new ObjectMapper();
-            if (messages.isEmpty()) {
-                log.info("No more messages to process.");
-                break;
-            }
-
-            for (Message message : messages) {
-                try {
-                    UserCredentials cred = objectMapper.readValue(message.body(), UserCredentials.class);
-
-
-                    // Process the message
-                    processMessage(cred.getRefresh_token(), cred.getEmail());
-
-                    // Delete the message from the queue
-
-                    DeleteMessageRequest deleteMessageRequest = DeleteMessageRequest.builder()
-                            .queueUrl(CREDS_QUEUE_URL)
-                            .receiptHandle(message.receiptHandle())
-                            .build();
-                    sqsClient.deleteMessage(deleteMessageRequest);
-
-                } catch (Exception e) {
-
-                    log.log(Level.SEVERE,"",e);
-                }
+            } catch (Exception e) {
+                log.log(Level.SEVERE, "Error processing message: " + message.getMessageId(), e);
+                batchItemFailureList.add(new SQSBatchResponse.BatchItemFailure(message.getMessageId()));
             }
         }
+
+        return new SQSBatchResponse(batchItemFailureList);
     }
+
     private void processMessage(String refreshToken,String userId) throws Exception {
         String clientId = System.getenv("CLIENT_ID");
         String clientSecret= System.getenv("CLIENT_SECRET");
-        Date startDate = new Date();
-        Date endDate = new Date();
-        Calendar c = Calendar.getInstance();
-        c.setTime(startDate);
-        c.add(Calendar.DATE, -1);
-        startDate = c.getTime();
+// Get current date
+        Date currentDate = new Date();
+
+// Create calendar instances
+        Calendar calendarEnd = Calendar.getInstance();
+        Calendar calendarStart = Calendar.getInstance();
+
+        // Set endDate to current day 00:00 time
+        calendarEnd.setTime(currentDate);
+        calendarEnd.set(Calendar.HOUR_OF_DAY, 0);
+        calendarEnd.set(Calendar.MINUTE, 0);
+        calendarEnd.set(Calendar.SECOND, 0);
+        calendarEnd.set(Calendar.MILLISECOND, 0);
+        Date endDate = calendarEnd.getTime();
+
+// Set startDate to previous day 00:00 time
+        calendarStart.setTime(currentDate);
+        calendarStart.add(Calendar.DATE, -1);
+        calendarStart.set(Calendar.HOUR_OF_DAY, 0);
+        calendarStart.set(Calendar.MINUTE, 0);
+        calendarStart.set(Calendar.SECOND, 0);
+        calendarStart.set(Calendar.MILLISECOND, 0);
+        Date startDate = calendarStart.getTime();
+
+
         ObjectMapper objectMapper = new ObjectMapper();
         List<BankConfig> bankConfigs = null;
         try {
@@ -110,7 +102,7 @@ public class CredentialQueuePoller {
 
 
         for (Email e : emails) {
-            log.log(Level.SEVERE,"",e);
+            
 //            publishToQueue(e);
             publishToEmailSqs(e);
         }
@@ -119,23 +111,21 @@ public class CredentialQueuePoller {
     private void publishToEmailSqs(Email e){
 
         try {
+            //TODO
+            AmazonSQS sqs = AmazonSQSClientBuilder.defaultClient();
             String jsonMessage = objectMapper.writeValueAsString(e);
 
-            SendMessageRequest sendMessageRequest = SendMessageRequest.builder()
-                    .queueUrl(EMAIL_QUEUE_URL)
-                    .messageBody(jsonMessage)
-                    .build();
+            SendMessageRequest sendMessageRequest = new SendMessageRequest()
+                    .withQueueUrl(EMAIL_QUEUE_URL)
+                    .withMessageBody(jsonMessage);
+            SendMessageResult sendMessageResult = sqs.sendMessage(sendMessageRequest);
 
-            SendMessageResponse sendMessageResponse = sqsClient.sendMessage(sendMessageRequest);
 
-            log.info("Message sent with ID: " + sendMessageResponse.messageId());
+
+            log.info("Message sent with ID: " + sendMessageResult.getMessageId());
 
         } catch (Exception err) {
             log.log(Level.SEVERE,"",e);
         }
-    }
-
-    private void publishToQueue(Email e) throws IOException {
-        EmailQueuePoller.emailQueue.add(e);
     }
 }
